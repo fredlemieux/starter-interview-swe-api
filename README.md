@@ -75,8 +75,8 @@ You are tasked with implementing the storage and retrieval logic through two API
   data structure would be best for this
     - Data stored in an array for each map key property...
     - Key in format <date-ISO>_metric so we can easily pick out metrics if necessary
-    - We can fetch each day and top and tail the ends... CORRECTION date range is only by day not
-      date/time, so we ignore that for now.
+    - We can fetch each day and top and tail the ends... **CORRECTION** date range is only by day
+      not date/time, so we ignore that for now.
 - [x] For the GET route we
     - Validate the to/from query params and
     - then call getDate() on the db
@@ -98,3 +98,22 @@ Log times (approx):
 - 00:44 Extract routes into separate router
 - 00:52 Wire up GET data route with parser and database, test parser
 - 01:00 Wire up POST data route and simple test request... but no time to implement DB!
+
+### Post challenge thoughts
+
+- Didn't quite stick to the plan, but I think doing the GET route logic first actually made more
+  sense to keep focused on one task wiring, and also allowed for immediate testing of routes...
+    - I could at least build in all the validation logic for the requests
+- The curl commands in the [Task notes](https://powerxai.notion.site/) didn't work so
+  I had to create a Postman collection which ate a little time...
+    - Working curl:
+
+```bash
+curl --request POST \
+  --url http://localhost:3000/data \
+  --header 'Content-Type: text/plain' \
+  --data $'1649941817 Voltage 1.34\n1649941818 Voltage 1.35\n1649941817 Current 12.0\n1649941818 Current 14.0'
+```
+
+- Rereading the scope of the task, there was a particular interest in the data structure used,
+  hopefully the plan above is enough to show the approach I would have used!
