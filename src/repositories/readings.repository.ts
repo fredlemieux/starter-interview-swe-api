@@ -31,6 +31,7 @@ export default class ReadingsRepository implements IReadingsRepository {
   }
 
   async insertReadings(readings: SensorReading[]): Promise<{ success: true; }> {
+
     return {
       success: true
     };
