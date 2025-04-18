@@ -91,4 +91,5 @@ You are tasked with implementing the storage and retrieval logic through two API
 
 Log times:
 - 10:00 read and plan
-- 
+- 25:00 reorganise folder create abstract interface for repository and implment
+-   Create parser

@@ -1,6 +1,6 @@
 import db from "../database";
 
-interface SensorReading{
+export interface SensorReading{
   time: string;
   name: string;
   value: number;
