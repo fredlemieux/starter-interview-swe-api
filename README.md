@@ -66,7 +66,7 @@ You are tasked with implementing the storage and retrieval logic through two API
 ]
 ```
 
-### Plan:
+## Plan:
 
 - [x] create the parser (no test setup, let's not waste time, but TDD would be ideal for testing
   parser as we go...)
@@ -81,7 +81,7 @@ You are tasked with implementing the storage and retrieval logic through two API
     - Validate the to/from query params and
     - then call getDate() on the db
 
-### Thoughts:
+## Thoughts:
 
 - Structure...
 - Lib/ folder for helper functions like the parser
@@ -99,7 +99,7 @@ Log times (approx):
 - 00:52 Wire up GET data route with parser and database, test parser
 - 01:00 Wire up POST data route and simple test request... but no time to implement DB!
 
-### Post challenge thoughts
+## Post challenge thoughts
 
 - Didn't quite stick to the plan, but I think doing the GET route logic first actually made more
   sense to keep focused on one task wiring, and also allowed for immediate testing of routes...
