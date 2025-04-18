@@ -88,3 +88,7 @@ You are tasked with implementing the storage and retrieval logic through two API
 - Repository for communicating with the database, make it easier to swap out later... create
   abstract interface to implement...
 - Create a route for data/ keep things clean (refactor if we have time);
+
+Log times:
+- 10:00 read and plan
+- 
