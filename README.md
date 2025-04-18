@@ -48,37 +48,38 @@ You are tasked with implementing the storage and retrieval logic through two API
 
 ```jsx
 [
-    {
-        "time": "2022-04-14T13:10:17.000Z",
-        "name": "Voltage",
-        "value": 1.34
-    },
-    {
-        "time": "2022-04-14T13:10:17.000Z",
-        "name": "Current",
-        "value": 14
-    },
-    {
-        "time": "2022-04-14T00:00:00.000Z",
-        "name": "Power",
-        "value": 18.76
-    },
+  {
+    "time": "2022-04-14T13:10:17.000Z",
+    "name": "Voltage",
+    "value": 1.34
+  },
+  {
+    "time": "2022-04-14T13:10:17.000Z",
+    "name": "Current",
+    "value": 14
+  },
+  {
+    "time": "2022-04-14T00:00:00.000Z",
+    "name": "Power",
+    "value": 18.76
+  },
 ]
 ```
 
 ### Plan:
 
-- [ ] create the parser (no test setup, let's not waste time, but TDD would be ideal for testing
+- [x] create the parser (no test setup, let's not waste time, but TDD would be ideal for testing
   parser as we go...)
-- [ ] GET endpoint validation the body will be validated as part of the parser...
+- [x] GET endpoint validation the body will be validated as part of the parser...
 - [ ] Database in-memory storage should be easily retrievable and efficient for a range, so a Map<>
   data structure would be best for this
     - Data stored in an array for each map key property...
     - Key in format <date-ISO>_metric so we can easily pick out metrics if necessary
     - We can fetch each day and top and tail the ends... CORRECTION date range is only by day not
       date/time, so we ignore that for now.
-- [ ] For the GET route we
-    - Validate the to/from query params and then call getDate() on the db
+- [x] For the GET route we
+    - Validate the to/from query params and
+    - then call getDate() on the db
 
 ### Thoughts:
 
@@ -89,7 +90,11 @@ You are tasked with implementing the storage and retrieval logic through two API
   abstract interface to implement...
 - Create a route for data/ keep things clean (refactor if we have time);
 
-Log times:
-- 10:00 read and plan
-- 25:00 reorganise folder create abstract interface for repository and implment
--   Create parser
+Log times (approx):
+
+- 00:10 read and plan
+- 00:25 reorganise folder create abstract interface for repository and implement
+- 00:40 Create parser
+- 00:44 Extract routes into separate router
+- 00:52 Wire up GET data route with parser and database, test parser
+- 01:00 Wire up POST data route and simple test request... but no time to implement DB!
