@@ -120,17 +120,20 @@ curl --request POST \
 
 ## Progress outside of interview timeframe (post review)
 
+### Strict type checking for the Metric
+
 - Didn't catch the power calculation step :-( if I had caught it, I may have implemented a stricter
   Metric type (Union) and run time validation via type guard.
-- In a real world situation, especially ingesting data from building services and industrial
-  protocols, perhaps this would introduce brittleness to the system where metrics can be dynamic or
-  open-ended
-    - The lead time implementing this new metric into the code base could lead to data loss.
-      I would store everything that fits the schema of the line...
-    - If `POWER` is a necessary calculation, which it sounds like it is, and we want to allow
-      ingestion of all metrics, we can't validate it on each request because readings are line
-      by line one line does not guarantee the next, so:
-        - Warn or flag when required metrics are missing on the `GET` request
-        - Defer the Power calculation to a scheduled job (e.g. cron) at the end of the day...
-        - Anything else? metrics_metadata table perhaps? Totally forgot to consider sensorId as
-          part of the key! sensorId would be critical in real-world data.
+    - In a real world situation, especially ingesting data from building services and industrial
+      protocols, perhaps this would introduce brittleness to the system where metrics can be dynamic
+      or
+      open-ended
+        - The lead time implementing this new metric into the code base could lead to data loss.
+          I would store everything that fits the schema of the line...
+        - If `POWER` is a necessary calculation, which it sounds like it is, and we want to allow
+          ingestion of all metrics, we can't validate it on each request because readings are line
+          by line one line does not guarantee the next, so:
+            - Warn or flag when required metrics are missing on the `GET` request
+            - Defer the Power calculation to a scheduled job (e.g. cron) at the end of the day...
+            - Anything else? metrics_metadata table perhaps? Totally forgot to consider sensorId as
+              part of the key! sensorId would be critical in real-world data.
