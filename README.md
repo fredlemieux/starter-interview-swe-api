@@ -117,3 +117,41 @@ curl --request POST \
 
 - Rereading the scope of the task, there was a particular interest in the data structure used,
   hopefully the plan above is enough to show the approach I would have used!
+
+## Progress outside interview timeframe (post review)
+
+### Strict type checking for the Metric
+
+- Didn't catch the power calculation step :-( if I had caught it, I may have implemented a stricter
+  Metric type (Union) and run time validation via type guard.
+    - In a real world situation, especially ingesting data from building services and industrial
+      protocols, perhaps this would introduce brittleness to the system where metrics can be dynamic
+      or
+      open-ended
+        - The lead time implementing this new metric into the code base could lead to data loss.
+          I would store everything that fits the schema of the line...
+        - If `POWER` is a necessary calculation, which it sounds like it is, and we want to allow
+          ingestion of all metrics, we can't validate it on each request because readings are line
+          by line one line does not guarantee the next, so:
+            - Warn or flag when required metrics are missing on the `GET` request
+            - Defer the Power calculation to a scheduled job (e.g. cron) at the end of the day...
+            - Anything else? metrics_metadata table perhaps? Totally forgot to consider sensorId as
+              part of the key! sensorId would be critical in real-world data.
+
+#### Post Implementation notes
+
+- I used a type guard to implement runtime validation and compile-time type narrowing.
+- The use of a const read-only array was fine with only two Metrics, and using .find() allowed me to
+  avoid using as (which I did initially with .includes()).
+    - commit: 9cd4ac3f74dc8f7e5ee228ce87ae1343ef3f5778
+- Comment from `simondo92`: How would we validate if that list grows to hundreds of codes?
+    - As discussed with only a few metrics Arrays are fine, but as this list scales Arrays are not
+      optimal..
+    - Instead we should use a Set<> and then use .has() to check for the metric
+    - This is because Array methods like includes, find, etc, will iterate through each element of
+      the array, resulting in O(n) complexity which grows linearly with size
+    - On the other hand Set<> has a O(1) constant time lookup - we'll implement as the final commit
+- Last point, and then we should really move on, realistically you would not store these metrics as
+  constants.
+  They would be fetched from a database, so we'd have to sacrifice compile-time checks and only use
+  the run-time check. Branded types could be used if we want to label the validated metrics.

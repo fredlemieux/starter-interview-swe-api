@@ -1,10 +1,6 @@
 import db from "../database";
+import {SensorReading} from "../types/sensors";
 
-export interface SensorReading {
-  time: string;
-  name: string;
-  value: number;
-}
 
 interface IReadingsRepository {
   getReadings(from: Date, to: Date): Promise<{ success: true, data: SensorReading[] } | {

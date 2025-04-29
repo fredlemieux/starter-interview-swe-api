@@ -1,4 +1,4 @@
-import {SensorReading} from "../repositories/readings.repository";
+import {METRICS, SensorReading, ValidMetric} from "../types/sensors";
 
 export function parseReadingsPayload(payload: string) {
   const lines = payload.split('\n');
@@ -31,6 +31,10 @@ function validateAndParse(line: string, row: number): SensorReading {
     throw new Error(`Row: ${row} has time: ${date}  in incorrect format`);
   }
 
+  if (!isMetricValid(name)) {
+    throw new Error(`Row: ${row} has metric ${name} which is not one of allowed: ${METRICS}`);
+  }
+
   const value = Number(valueStr);
 
   if (isNaN(value)) {
@@ -42,5 +46,10 @@ function validateAndParse(line: string, row: number): SensorReading {
     name,
     value
   };
+}
 
+const METRIC_SET = new Set(METRICS);
+
+function isMetricValid(metric: string): metric is ValidMetric {
+  return METRIC_SET.has(metric as ValidMetric); // This has O(1) compared to Array.includes()
 }
