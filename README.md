@@ -118,7 +118,7 @@ curl --request POST \
 - Rereading the scope of the task, there was a particular interest in the data structure used,
   hopefully the plan above is enough to show the approach I would have used!
 
-## Progress outside of interview timeframe (post review)
+## Progress outside interview timeframe (post review)
 
 ### Strict type checking for the Metric
 
@@ -137,3 +137,17 @@ curl --request POST \
             - Defer the Power calculation to a scheduled job (e.g. cron) at the end of the day...
             - Anything else? metrics_metadata table perhaps? Totally forgot to consider sensorId as
               part of the key! sensorId would be critical in real-world data.
+
+#### Post Implementation notes
+
+- I used a type guard to implement runtime validation and compile-time type narrowing.
+- The use of a const read-only array was fine with only two Metrics, and using .find() allowed me to
+  avoid using as (which I did initially with .includes()).
+    - commit: 9cd4ac3f74dc8f7e5ee228ce87ae1343ef3f5778
+- Comment from `simondo92`: How would we validate if that list grows to hundreds of codes?
+    - As discussed with only a few metrics Arrays are fine, but as this list scales Arrays are not
+      optimal..
+    - Instead we should use a Set<> and then use .has() to check for the metric
+    - This is because Array methods like includes, find, etc, will iterate through each element of
+      the array, resulting in O(n) complexity which grows linearly with size
+    - On the other hand Set<> has a O(1) constant time lookup - we'll implement as the final commit
