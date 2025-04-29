@@ -48,6 +48,8 @@ function validateAndParse(line: string, row: number): SensorReading {
   };
 }
 
+const METRIC_SET = new Set(METRICS);
+
 function isMetricValid(metric: string): metric is ValidMetric {
-  return METRICS.find((el): el is ValidMetric => el === metric) !== undefined;
+  return METRIC_SET.has(metric as ValidMetric); // This has O(1) compared to Array.includes()
 }
