@@ -49,5 +49,7 @@ function validateAndParse(line: string, row: number): SensorReading {
 }
 
 function isMetricValid(metric: string): metric is ValidMetric {
-  return METRICS.includes(metric as ValidMetric);
+  const idx = METRICS.findIndex(el => el === metric);
+
+  return idx !== -1;
 }
