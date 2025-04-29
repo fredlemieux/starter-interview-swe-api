@@ -151,3 +151,7 @@ curl --request POST \
     - This is because Array methods like includes, find, etc, will iterate through each element of
       the array, resulting in O(n) complexity which grows linearly with size
     - On the other hand Set<> has a O(1) constant time lookup - we'll implement as the final commit
+- Last point, and then we should really move on, realistically you would not store these metrics as
+  constants.
+  They would be fetched from a database, so we'd have to sacrifice compile-time checks and only use
+  the run-time check. Branded types could be used if we want to label the validated metrics.
