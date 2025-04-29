@@ -31,6 +31,10 @@ function validateAndParse(line: string, row: number): SensorReading {
     throw new Error(`Row: ${row} has time: ${date}  in incorrect format`);
   }
 
+  if (!isMetricValid(name)) {
+    throw new Error(`Row: ${row} has metric ${name} which is not one of allowed: ${METRICS}`);
+  }
+
   const value = Number(valueStr);
 
   if (isNaN(value)) {
