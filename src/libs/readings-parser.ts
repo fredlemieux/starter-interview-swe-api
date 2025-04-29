@@ -1,4 +1,4 @@
-import {SensorReading} from "../types/sensors";
+import {METRICS, SensorReading, ValidMetric} from "../types/sensors";
 
 export function parseReadingsPayload(payload: string) {
   const lines = payload.split('\n');
@@ -43,9 +43,6 @@ function validateAndParse(line: string, row: number): SensorReading {
     value
   };
 }
-
-const METRICS = ["VOLTAGE", "CURRENT"] as const;
-type ValidMetric = typeof METRICS[number]
 
 function isMetricValid(metric: string): metric is ValidMetric {
   return METRICS.includes(metric as ValidMetric);
