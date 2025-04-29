@@ -1,4 +1,4 @@
-import {SensorReading} from "../repositories/readings.repository";
+import {SensorReading} from "../types/sensors";
 
 export function parseReadingsPayload(payload: string) {
   const lines = payload.split('\n');
