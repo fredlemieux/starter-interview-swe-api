@@ -42,5 +42,11 @@ function validateAndParse(line: string, row: number): SensorReading {
     name,
     value
   };
+}
 
+const METRICS = ["VOLTAGE", "CURRENT"] as const;
+type ValidMetric = typeof METRICS[number]
+
+function isMetricValid(metric: string): metric is ValidMetric {
+  return METRICS.includes(metric as ValidMetric);
 }
