@@ -19,7 +19,7 @@ export interface DB {
 const sensorData: Map<ISODate, Map<ValidMetric, Map<ISODateTime, SensorReading>>> = new Map();
 
 /**
- * Store a reading in the database using the given key
+ * Store a reading in the database
  */
 export const addReading = async (reading: SensorReading): Promise<SensorReading> => {
   const [dateKey] = new Date(reading.time).toISOString().split("T");
@@ -41,7 +41,7 @@ export const addReading = async (reading: SensorReading): Promise<SensorReading>
 };
 
 /**
- * Retrieve a reading from the database using the given key
+ * Retrieve a readings from a range of dates
  */
 export const getReadings = async (from: Date, to: Date): Promise<SensorReading[]> => {
   const dateKeys = dateKeysFromRange(from, to);
@@ -56,6 +56,9 @@ export const getReadings = async (from: Date, to: Date): Promise<SensorReading[]
   });
 };
 
+/**
+ * Get all data from the database (useful for testing)
+ */
 export const getAllDays = async (): Promise<SensorReading[]> => {
   return Array.from(sensorData.values())
     .flatMap(metricMaps => Array.from(metricMaps.values())
