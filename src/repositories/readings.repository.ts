@@ -1,5 +1,5 @@
 import inMemoryDatabase, {DB} from "../database";
-import {SensorReading, ValidMetric} from "../types/sensors.types";
+import {SensorReading} from "../types/sensors.types";
 
 export interface IReadingsRepository {
   getAllDays(): Promise<{ success: boolean, data: SensorReading[] }>;
