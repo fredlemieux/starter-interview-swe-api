@@ -1,4 +1,4 @@
-import db from "../database";
+import inMemoryDatabase, {DB} from "../database";
 import {SensorReading, ValidMetric} from "../types/sensors.types";
 
 export interface IReadingsRepository {
@@ -16,8 +16,14 @@ export interface IReadingsRepository {
 }
 
 export default class ReadingsRepository implements IReadingsRepository {
+  private db: DB;
+
+  constructor(database: DB = inMemoryDatabase) {
+    this.db = database;
+  }
+
   async getAllDays() {
-    const data = db.getAllDays();
+    const data = await this.db.getAllDays();
     return {
       success: true,
       data
@@ -28,7 +34,7 @@ export default class ReadingsRepository implements IReadingsRepository {
     success: false;
     error: string
   }> {
-    const readings = await db.getReadings(from, to);
+    const readings = await this.db.getReadings(from, to);
     return {
       success: true,
       data: readings
@@ -37,7 +43,7 @@ export default class ReadingsRepository implements IReadingsRepository {
 
   async insertReadings(readings: SensorReading[]): Promise<{ success: true; }> {
     for (let i = 0; i < readings.length; i++) { // This is an implementation detail that perhaps we want to keep in db?
-      await db.addReading(readings[i]);
+      await this.db.addReading(readings[i]);
     }
 
     return {

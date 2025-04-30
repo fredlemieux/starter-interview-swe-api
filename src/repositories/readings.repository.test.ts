@@ -1,12 +1,12 @@
 import ReadingsRepository, {IReadingsRepository} from "./readings.repository";
 import {METRICS, SensorReading, ValidMetric} from "../types/sensors.types";
-import db from "../database";
+import inMemoryDatabase from "../database";
 
 let repo: IReadingsRepository;
 
 beforeEach(() => {
-  db.resetDatabase();
-  repo = new ReadingsRepository();
+  repo = new ReadingsRepository(inMemoryDatabase);
+  inMemoryDatabase.resetDatabase();
 });
 
 function createMockReading(date?: Date, name?: ValidMetric) {
