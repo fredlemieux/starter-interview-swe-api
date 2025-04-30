@@ -1,10 +1,6 @@
 import {SensorReading, ValidMetric} from "../types/sensors.types";
 import {dateKeysFromRange} from "../libs/dates";
 
-//
-// type DailySensorReadingKey<T extends string> =
-//   T extends `${infer _dateIso}_${ValidMetric}` ? T : never;
-
 export type ISODate = string;
 export type ISODateTime = string;
 
