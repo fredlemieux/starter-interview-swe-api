@@ -42,12 +42,9 @@ export default class ReadingsRepository implements IReadingsRepository {
   }
 
   async insertReadings(readings: SensorReading[]): Promise<{ success: true; }> {
-    for (let i = 0; i < readings.length; i++) { // This is an implementation detail that perhaps we want to keep in db?
-      await this.db.addReading(readings[i]);
-    }
 
-    return {
-      success: true
-    };
+    await Promise.all(readings.map(reading => this.db.addReading(reading)));
+
+    return {success: true};
   }
 }
