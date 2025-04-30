@@ -155,3 +155,11 @@ curl --request POST \
   constants.
   They would be fetched from a database, so we'd have to sacrifice compile-time checks and only use
   the run-time check. Branded types could be used if we want to label the validated metrics.
+
+### Database implementation
+
+- Adding and setting up jest to test the repository contract!
+- Clear database required to clear the database between tests
+- My original idea of having <date>_<metric> as a key was not sufficient, as you'd need to know the
+  metrics before retrieving data, having the metric name as a secondary nested map would be better.
+- 
