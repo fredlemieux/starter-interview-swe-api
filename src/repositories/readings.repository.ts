@@ -1,5 +1,5 @@
-import db, {DailyKey} from "../database";
-import {SensorReading, ValidMetric} from "../types/sensors";
+import db from "../database";
+import {SensorReading, ValidMetric} from "../types/sensors.types";
 
 export interface IReadingsRepository {
   getAllDays(): Promise<{ success: boolean, data: SensorReading[] }>;
@@ -28,26 +28,20 @@ export default class ReadingsRepository implements IReadingsRepository {
     success: false;
     error: string
   }> {
-    const readings = await db.getReadings();
+    const readings = await db.getReadings(from, to);
     return {
       success: true,
-      data: []
+      data: readings
     };
   }
 
   async insertReadings(readings: SensorReading[]): Promise<{ success: true; }> {
     for (let i = 0; i < readings.length; i++) { // This is an implementation detail that perhaps we want to keep in db?
-      const key = this.createKey(readings[i]);
-      await db.addReading(key, readings[i]);
+      await db.addReading(readings[i]);
     }
 
     return {
       success: true
     };
-  }
-
-  createKey({time, name}: SensorReading): DailyKey {
-    const [date] = time.split('T');
-    return `${date}_${name}`;
   }
 }

@@ -1,24 +1,45 @@
-import {SensorReading, ValidMetric} from "../types/sensors";
+import {SensorReading, ValidMetric} from "../types/sensors.types";
+import {dateKeysFromRange} from "../libs/dates";
 
 //
 // type DailySensorReadingKey<T extends string> =
 //   T extends `${infer _dateIso}_${ValidMetric}` ? T : never;
 
-export type DailyKey = `${string}_${ValidMetric}`;
+export type ISODate = string;
+export type ISODateTime = string;
+
+export interface DB {
+  getAllDays(): Promise<SensorReading[]>;
+
+  getReadings(from: Date, to: Date): Promise<SensorReading[]>;
+
+  addReading(reading: SensorReading): Promise<SensorReading>;
+
+  resetDatabase(): void;
+}
 
 // This is a fake database which stores data in-memory while the process is running
 // Feel free to change the data structure to anything else you would like
-const sensorData: Map<DailyKey, Map<string, SensorReading>> = new Map();
+const sensorData: Map<ISODate, Map<ValidMetric, Map<ISODateTime, SensorReading>>> = new Map();
 
 /**
  * Store a reading in the database using the given key
  */
-export const addReading = (key: DailyKey, reading: SensorReading): SensorReading => {
-  if (!sensorData.get(key)) {
-    sensorData.set(key, new Map());
+export const addReading = async (reading: SensorReading): Promise<SensorReading> => {
+  const [dateKey] = new Date(reading.time).toISOString().split("T");
+
+  if (!sensorData.get(dateKey)) {
+    sensorData.set(dateKey, new Map());
   }
 
-  sensorData.get(key)!.set(reading.time, reading);
+  const metricsMap = sensorData.get(dateKey)!; // use type Narrowing and predicate to ensure we don't use !
+
+  if (!metricsMap.get(reading.name)) {
+    metricsMap.set(reading.name, new Map());
+  }
+
+  const readingData = metricsMap.get(reading.name)!;
+  readingData.set(reading.time, reading);
 
   return reading;
 };
@@ -26,26 +47,34 @@ export const addReading = (key: DailyKey, reading: SensorReading): SensorReading
 /**
  * Retrieve a reading from the database using the given key
  */
-export const getReadings = (from: Date, to: Date): SensorReading[] | undefined => {
+export const getReadings = async (from: Date, to: Date): Promise<SensorReading[]> => {
+  const dateKeys = dateKeysFromRange(from, to);
+  const data: SensorReading[] = [];
 
-  if (!sensorData.get(key)) {
-    sensorData.set(key, new Map());
-  }
+  dateKeys.forEach(key => {
+    const metricsMap = sensorData.get(key);
+    if (metricsMap) {
+      metricsMap.forEach(readingsMap => {
+        readingsMap.forEach(readings => {
+          data.push(readings);
+        });
+      });
+    }
+  });
 
-  //sensorData.get(key)!.set()
-
-  return [];
+  return data;
 };
 
-export const getAllDays = () => {
+export const getAllDays = async () => {
   const readings: SensorReading[] = [];
 
-  for (const [key, values] of sensorData) {
-    values.forEach(reading => {
-      readings.push(reading);
+  sensorData.forEach(metricMaps => {
+    metricMaps.forEach(readingMaps => {
+      readingMaps.forEach(reading => {
+        readings.push(reading);
+      });
     });
-  }
-
+  });
   return readings;
 };
 
@@ -56,20 +85,11 @@ export const resetDatabase = () => {
   sensorData.clear();
 };
 
-function parseDailyKey(dailyKey: string): string[] {
-  const parsed = dailyKey.split('_');
-
-  if (parsed.length !== 2) throw new Error('key not in correct format');
-
-  return parsed;
-}
-
-
-const db = {
+const inMemoryDatabase: DB = {
   addReading,
   getReadings,
   getAllDays,
   resetDatabase
 };
 
-export default db;
+export default inMemoryDatabase;
