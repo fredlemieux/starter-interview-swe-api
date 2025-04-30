@@ -49,20 +49,17 @@ export const addReading = async (reading: SensorReading): Promise<SensorReading>
  */
 export const getReadings = async (from: Date, to: Date): Promise<SensorReading[]> => {
   const dateKeys = dateKeysFromRange(from, to);
-  const data: SensorReading[] = [];
 
-  dateKeys.forEach(key => {
+  return dateKeys.flatMap(key => {
     const metricsMap = sensorData.get(key);
-    if (metricsMap) {
-      metricsMap.forEach(readingsMap => {
-        readingsMap.forEach(readings => {
-          data.push(readings);
-        });
-      });
-    }
-  });
 
-  return data;
+    if (!metricsMap) return [];
+
+    return Array.from(metricsMap.values())
+      .flatMap(readingsMap => {
+        return Array.from(readingsMap.values());
+      });
+  });
 };
 
 export const getAllDays = async () => {
