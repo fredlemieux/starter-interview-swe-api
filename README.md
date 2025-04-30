@@ -162,4 +162,19 @@ curl --request POST \
 - Clear database required to clear the database between tests
 - My original idea of having <date>_<metric> as a key was not sufficient, as you'd need to know the
   metrics before retrieving data, having the metric name as a secondary nested map would be better.
-- 
+- Initially implemented using nested loops, a naive approach, check that all tests are working
+  correctly
+- The nested loops looked pretty terrible, used Array.from() and flatmaps, so that we have a more
+  functional approach to the algorithm
+
+#### Post Implementation thoughts
+
+- Tbh, I'm very glad I did not start with this in the challenge. It's a bit more fiddly and takes
+  more time. However, **I should remember the Dependency Injection of the database** next time!
+- And perhaps I could have implemented a mock database to just accept and return data for a more
+  thorough solution...
+- The sensorData type could have be completed with a little more thought and more descriptions on
+  how it should be implemented.
+- This is the first time I've tried to implement time series data in memory, and it reminds me of an
+  article I read on how time-series is implemented in NoSQL like MongoDB. Personally, I'd never use
+  a key value store for time-series data in production. But go to run through this!
