@@ -1,4 +1,4 @@
-import {METRICS, SensorReading, ValidMetric} from "../types/sensors";
+import {METRICS, SensorReading, ValidMetric} from "../types/sensors.types";
 
 export function parseReadingsPayload(payload: string) {
   const lines = payload.split('\n');

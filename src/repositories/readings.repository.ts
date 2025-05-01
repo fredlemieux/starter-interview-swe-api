@@ -1,8 +1,9 @@
-import db from "../database";
-import {SensorReading} from "../types/sensors";
+import inMemoryDatabase, {DB} from "../database";
+import {SensorReading} from "../types/sensors.types";
 
+export interface IReadingsRepository {
+  getAllDays(): Promise<{ success: boolean, data: SensorReading[] }>;
 
-interface IReadingsRepository {
   getReadings(from: Date, to: Date): Promise<{ success: true, data: SensorReading[] } | {
     success: false,
     error: string
@@ -15,21 +16,35 @@ interface IReadingsRepository {
 }
 
 export default class ReadingsRepository implements IReadingsRepository {
+  private db: DB;
+
+  constructor(database: DB = inMemoryDatabase) {
+    this.db = database;
+  }
+
+  async getAllDays() {
+    const data = await this.db.getAllDays();
+    return {
+      success: true,
+      data
+    };
+  }
+
   async getReadings(from: Date, to: Date): Promise<{ success: true; data: SensorReading[] } | {
     success: false;
     error: string
   }> {
-    // const readings = await db.getReadings()
+    const readings = await this.db.getReadings(from, to);
     return {
       success: true,
-      data: []
+      data: readings
     };
   }
 
   async insertReadings(readings: SensorReading[]): Promise<{ success: true; }> {
 
-    return {
-      success: true
-    };
+    await Promise.all(readings.map(reading => this.db.addReading(reading)));
+
+    return {success: true};
   }
 }
