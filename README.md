@@ -178,3 +178,4 @@ curl --request POST \
 - This is the first time I've tried to implement time series data in memory, and it reminds me of an
   article I read on how time-series is implemented in NoSQL like MongoDB. Personally, I'd never use
   a key value store for time-series data in production. But go to run through this!
+- Further improvements would be to improve validation and error handling!

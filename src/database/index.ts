@@ -24,18 +24,20 @@ const sensorData: Map<ISODate, Map<ValidMetric, Map<ISODateTime, SensorReading>>
 export const addReading = async (reading: SensorReading): Promise<SensorReading> => {
   const [dateKey] = new Date(reading.time).toISOString().split("T");
 
-  if (!sensorData.get(dateKey)) {
-    sensorData.set(dateKey, new Map());
+  let metricsMap = sensorData.get(dateKey);
+  if (!metricsMap) {
+    metricsMap = new Map();
+    sensorData.set(dateKey, metricsMap);
   }
 
-  const metricsMap = sensorData.get(dateKey)!; // use type Narrowing and predicate to ensure we don't use !
 
-  if (!metricsMap.get(reading.name)) {
-    metricsMap.set(reading.name, new Map());
+  let readingsMap = metricsMap.get(reading.name);
+  if (!readingsMap) {
+    readingsMap = new Map();
+    metricsMap.set(reading.name, readingsMap);
   }
 
-  const readingData = metricsMap.get(reading.name)!;
-  readingData.set(reading.time, reading);
+  readingsMap.set(reading.time, reading);
 
   return reading;
 };
